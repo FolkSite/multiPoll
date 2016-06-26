@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model package="multipoll" baseClass="xPDOObject" platform="mysql" defaultEngine="MyISAM" phpdoc-package="multipoll" version="1.1">
+
+	<object class="multiPollItem" table="multipoll_items" extends="xPDOSimpleObject">
+		<field key="text" dbtype="varchar" precision="100" phptype="string" null="false" default=""/>
+		<field key="description" dbtype="text" phptype="text" null="true" default=""/>
+		<field key="active" dbtype="tinyint" precision="1" phptype="boolean" null="true" default="1"/>
+		<field key="rank" dbtype="int" precision="10" phptype="integer" attributes="unsigned" null="false" default="0" />
+		<field key="type" dbtype="varchar" precision="10" phptype="string" null="false" default="radio" />
+		<field key="answer_count" dbtype="int" precision="10" phptype="integer" attributes="unsigned" null="false" default="0" />
+
+		<index alias="text" name="text" primary="false" unique="false" type="BTREE">
+			<column key="text" length="" collation="A" null="false"/>
+		</index>
+		<index alias="active" name="active" primary="false" unique="false" type="BTREE">
+			<column key="active" length="" collation="A" null="false"/>
+		</index>
+		<index alias="type" name="type" primary="false" unique="false" type="BTREE">
+			<column key="type" length="" collation="A" null="false"/>
+		</index>
+		<index alias="rank" name="rank" primary="false" unique="false" type="BTREE">
+			<column key="rank" length="" collation="A" null="false"/>
+		</index>
+
+		<composite alias="Options" class="multiPollOptionItem" local="id" foreign="poll_id" cardinality="many" owner="local" />
+		<composite alias="Answers" class="multiPollAnswerItem" local="id" foreign="poll_id" cardinality="many" owner="local" />
+	</object>
+
+  	<object class="multiPollOptionItem" table="multipoll_option_items" extends="xPDOSimpleObject">
+		<field key="poll_id" dbtype="int" precision="10" phptype="integer" attributes="unsigned" null="false" default="0" />
+		<field key="option_text" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+        <field key="rank" dbtype="int" precision="10" phptype="integer" attributes="unsigned" null="false" default="0" />
+        <field key="active" dbtype="tinyint" precision="1" phptype="boolean" null="true" default="1"/>
+        <field key="right" dbtype="tinyint" precision="1" phptype="boolean" attributes="unsigned" null="false" default="0" />
+		
+		<index alias="rank" name="rank" primary="false" unique="false" type="BTREE">
+			<column key="rank" length="" collation="A" null="false"/>
+		</index>
+		<index alias="active" name="active" primary="false" unique="false" type="BTREE">
+			<column key="active" length="" collation="A" null="false"/>
+		</index>
+		<index alias="poll_id" name="poll_id" primary="false" unique="false" type="BTREE">
+			<column key="poll_id" length="" collation="A" null="false"/>
+		</index>
+		<index alias="right" name="right" primary="false" unique="false" type="BTREE">
+			<column key="right" length="" collation="A" null="false"/>
+		</index>
+		
+		<composite alias="Answers" class="multiPollAnswerItem" local="id" foreign="option_id" cardinality="many" owner="local" />
+		<aggregate alias="Question" class="multiPollItem" local="poll_id" foreign="id" cardinality="one" owner="foreign" />
+	</object>
+
+	<object class="multiPollAnswerItem" table="multipoll_answer_items" extends="xPDOSimpleObject">
+        <field key="user_id" dbtype="int" precision="10" phptype="integer" attributes="unsigned" null="false" default="0" />
+		<field key="poll_id" dbtype="int" precision="10" phptype="integer" attributes="unsigned" null="false" default="0" />
+		<field key="option_id" dbtype="int" precision="10" phptype="integer" attributes="unsigned" null="false" default="0" />
+		<field key="user_ip" dbtype="varchar" precision="255" phptype="string" null="false" default="" />
+		<field key="timestamp" dbtype="timestamp" phptype="timestamp" null="false" default="CURRENT_TIMESTAMP" />
+		
+		<index alias="user_id" name="user_id" primary="false" unique="false" type="BTREE">
+			<column key="user_id" length="" collation="A" null="false"/>
+		</index>
+		<index alias="poll_id" name="poll_id" primary="false" unique="false" type="BTREE">
+			<column key="poll_id" length="" collation="A" null="false"/>
+		</index>
+		<index alias="option_id" name="option_id" primary="false" unique="false" type="BTREE">
+			<column key="option_id" length="" collation="A" null="false"/>
+		</index>
+		<index alias="timestamp" name="timestamp" primary="false" unique="false" type="BTREE">
+			<column key="timestamp" length="" collation="A" null="false"/>
+		</index>
+
+		<aggregate alias="User" class="modUser" local="user_id" foreign="id" cardinality="one" owner="foreign" />
+		<aggregate alias="Question" class="multiPollItem" local="poll_id" foreign="id" cardinality="one" owner="foreign" />
+		<aggregate alias="Option" class="multiPollOptionItem" local="option_id" foreign="id" cardinality="one" owner="foreign" />
+	</object>
+
+</model>

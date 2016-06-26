@@ -1,0 +1,1 @@
+<div id="multipoll-panel-poll-div"></div>
