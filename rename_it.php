@@ -1,5 +1,4 @@
 <?php
-// test 2
 /**
  * Rename script for multiPoll
  *
